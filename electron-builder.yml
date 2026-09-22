@@ -41,3 +41,12 @@ npmRebuild: false
 publish:
   provider: generic
   url: https://example.com/auto-updates
+build:
+  asar: true
+  extraResoruces:
+    - from: src/main/prisma/migrations
+      to: migrations
+    - from: src/main/client/prisma.ts
+      to: prismaClient
+    - from: src/main/prisma/schema.prisma
+      to: schema

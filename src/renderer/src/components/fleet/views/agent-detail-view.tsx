@@ -1,22 +1,29 @@
-"use client"
+'use client'
 
-import { ArrowLeft, Camera, Pause, Play, Square } from "lucide-react"
-import { useFleet } from "@/lib/store"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AgentAvatar } from "@/components/fleet/agent-avatar"
-import { StatusLabel } from "@/components/fleet/status-dot"
-import { ActivityTab } from "@/components/fleet/agent-detail/activity-tab"
-import { TerminalTab } from "@/components/fleet/agent-detail/terminal-tab"
-import { ChangesTab } from "@/components/fleet/agent-detail/changes-tab"
-import { MachineTab } from "@/components/fleet/agent-detail/machine-tab"
-import { agentEvents, terminalOutput, diffsByAgent } from "@/lib/mock-data"
-import { formatUptime } from "@/lib/format"
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
-import { Bot } from "lucide-react"
+import { ArrowLeft, Camera, Pause, Play, Square } from 'lucide-react'
+import { useFleet } from '@renderer/lib/store'
+import { Button } from '@renderer/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/components/ui/tabs'
+import { AgentAvatar } from '@renderer/components/fleet/agent-avatar'
+import { StatusLabel } from '@renderer/components/fleet/status-dot'
+import { ActivityTab } from '@renderer/components/fleet/agent-detail/activity-tab'
+import { TerminalTab } from '@renderer/components/fleet/agent-detail/terminal-tab'
+import { ChangesTab } from '@renderer/components/fleet/agent-detail/changes-tab'
+import { MachineTab } from '@renderer/components/fleet/agent-detail/machine-tab'
+import { agentEvents, terminalOutput, diffsByAgent } from '@renderer/lib/mock-data'
+import { formatUptime } from '@renderer/lib/format'
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription
+} from '@renderer/components/ui/empty'
+import { Bot } from 'lucide-react'
 
 export function AgentDetailView({ agentId }: { agentId: string }) {
-  const { agents, groups, projects, setView, pauseAgent, restartAgent, stopAgent, snapshotAgent } = useFleet()
+  const { agents, groups, projects, setView, pauseAgent, restartAgent, stopAgent, snapshotAgent } =
+    useFleet()
   const agent = agents.find((a) => a.id === agentId)
 
   if (!agent) {
@@ -29,7 +36,7 @@ export function AgentDetailView({ agentId }: { agentId: string }) {
           <EmptyTitle>Agent not found</EmptyTitle>
           <EmptyDescription>This agent may have been removed.</EmptyDescription>
         </EmptyHeader>
-        <Button size="sm" variant="outline" onClick={() => setView({ name: "agents" })}>
+        <Button size="sm" variant="outline" onClick={() => setView({ name: 'agents' })}>
           Back to Agents
         </Button>
       </Empty>
@@ -45,7 +52,12 @@ export function AgentDetailView({ agentId }: { agentId: string }) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-4 border-b border-border p-5">
-        <Button variant="ghost" size="sm" className="-ml-2 w-fit text-muted-foreground" onClick={() => setView({ name: "agents" })}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2 w-fit text-muted-foreground"
+          onClick={() => setView({ name: 'agents' })}
+        >
           <ArrowLeft data-icon="inline-start" />
           Agents
         </Button>
@@ -59,7 +71,8 @@ export function AgentDetailView({ agentId }: { agentId: string }) {
                 <StatusLabel status={agent.status} />
               </div>
               <p className="tabular text-xs text-muted-foreground">
-                {agent.machine.vcpu} vCPU · {agent.machine.memoryGb} GB · {agent.machine.region} · uptime {formatUptime(agent.uptimeMinutes)}
+                {agent.machine.vcpu} vCPU · {agent.machine.memoryGb} GB · {agent.machine.region} ·
+                uptime {formatUptime(agent.uptimeMinutes)}
                 {group && <> · {group.name}</>}
                 {project && <> · {project.name}</>}
               </p>

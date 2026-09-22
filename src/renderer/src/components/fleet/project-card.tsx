@@ -1,10 +1,17 @@
-"use client"
+'use client'
 
-import { GitBranch } from "lucide-react"
-import { useFleet } from "@/lib/store"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import type { Project } from "@/lib/types"
+import { GitBranch } from 'lucide-react'
+import { useFleet } from '@renderer/lib/store'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from '@renderer/components/ui/card'
+import { Progress } from '@renderer/components/ui/progress'
+import type { Project } from '@renderer/lib/types'
 
 export function ProjectCard({ project }: { project: Project }) {
   const { groups, tasks } = useFleet()
@@ -12,10 +19,10 @@ export function ProjectCard({ project }: { project: Project }) {
   const projectTasks = tasks.filter((t) => t.projectId === project.id)
 
   const counts = {
-    planned: projectTasks.filter((t) => t.column === "planned").length,
-    "in-progress": projectTasks.filter((t) => t.column === "in-progress").length,
-    "in-review": projectTasks.filter((t) => t.column === "in-review").length,
-    done: projectTasks.filter((t) => t.column === "done").length,
+    planned: projectTasks.filter((t) => t.column === 'planned').length,
+    'in-progress': projectTasks.filter((t) => t.column === 'in-progress').length,
+    'in-review': projectTasks.filter((t) => t.column === 'in-review').length,
+    done: projectTasks.filter((t) => t.column === 'done').length
   }
   const total = projectTasks.length || 1
   const progress = (counts.done / total) * 100
@@ -48,14 +55,15 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
         <div className="grid grid-cols-4 gap-2 text-center">
           <TaskCount label="Planned" value={counts.planned} />
-          <TaskCount label="In progress" value={counts["in-progress"]} />
-          <TaskCount label="Review" value={counts["in-review"]} />
+          <TaskCount label="In progress" value={counts['in-progress']} />
+          <TaskCount label="Review" value={counts['in-review']} />
           <TaskCount label="Done" value={counts.done} />
         </div>
       </CardContent>
       <CardFooter>
         <span className="text-[11px] text-muted-foreground">
-          Branch <span className="font-mono text-foreground">{project.defaultBranch}</span> · Active {project.lastActivity}
+          Branch <span className="font-mono text-foreground">{project.defaultBranch}</span> · Active{' '}
+          {project.lastActivity}
         </span>
       </CardFooter>
     </Card>

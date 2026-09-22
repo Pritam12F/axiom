@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { Camera, Pause, Play, Square } from "lucide-react"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
-import { useFleet } from "@/lib/store"
-import { formatCurrency } from "@/lib/format"
-import type { Agent } from "@/lib/types"
+import { Camera, Pause, Play, Square } from 'lucide-react'
+import { Progress } from '@renderer/components/ui/progress'
+import { Button } from '@renderer/components/ui/button'
+import { useFleet } from '@renderer/lib/store'
+import { formatCurrency } from '@renderer/lib/format'
+import type { Agent } from '@renderer/lib/types'
 
 function Gauge({ label, percent }: { label: string; percent: number }) {
   return (
@@ -35,7 +35,10 @@ export function MachineTab({ agent }: { agent: Agent }) {
         <InfoRow label="Region" value={agent.machine.region} />
         <InfoRow label="Base image" value={agent.machine.baseImage} mono />
         <InfoRow label="IP address" value={agent.machine.ip} mono />
-        <InfoRow label="Machine size" value={`${agent.machine.vcpu} vCPU · ${agent.machine.memoryGb} GB`} />
+        <InfoRow
+          label="Machine size"
+          value={`${agent.machine.vcpu} vCPU · ${agent.machine.memoryGb} GB`}
+        />
         <InfoRow label="Disk" value={`${agent.machine.diskGb} GB`} />
         <InfoRow label="Cost" value={`${formatCurrency(agent.machine.costPerHour)}/hr`} />
       </div>
@@ -69,7 +72,15 @@ function InfoRow({ label, value, mono }: { label: string; value: string; mono?: 
   return (
     <div className="min-w-0">
       <p className="text-[11px] text-muted-foreground">{label}</p>
-      <p className={mono ? "truncate font-mono text-[12px] text-foreground" : "truncate text-[13px] text-foreground"}>{value}</p>
+      <p
+        className={
+          mono
+            ? 'truncate font-mono text-[12px] text-foreground'
+            : 'truncate text-[13px] text-foreground'
+        }
+      >
+        {value}
+      </p>
     </div>
   )
 }

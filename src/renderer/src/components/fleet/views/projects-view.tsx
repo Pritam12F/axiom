@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useFleet } from "@/lib/store"
-import { ProjectCard } from "@/components/fleet/project-card"
-import { NewProjectDialog } from "@/components/fleet/new-project-dialog"
+import { useFleet } from '@renderer/lib/store'
+import { ProjectCard } from '@renderer/components/fleet/project-card'
+import { NewProjectDialog } from '@renderer/components/fleet/new-project-dialog'
 
 export function ProjectsView() {
   const { projects } = useFleet()

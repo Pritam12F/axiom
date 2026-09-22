@@ -1,17 +1,17 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { useFleet } from "@/lib/store"
-import { AppSidebar } from "@/components/fleet/sidebar"
-import { Toolbar } from "@/components/fleet/toolbar"
-import { CommandPalette } from "@/components/fleet/command-palette"
-import { NewAgentSheet } from "@/components/fleet/new-agent-sheet"
-import { OverviewView } from "@/components/fleet/views/overview-view"
-import { AgentsView } from "@/components/fleet/views/agents-view"
-import { AgentDetailView } from "@/components/fleet/views/agent-detail-view"
-import { ProjectsView } from "@/components/fleet/views/projects-view"
-import { GroupsView } from "@/components/fleet/views/groups-view"
-import { ApprovalsView } from "@/components/fleet/views/approvals-view"
+import * as React from 'react'
+import { useFleet } from '@renderer/lib/store'
+import { AppSidebar } from '@renderer/components/fleet/sidebar'
+import { Toolbar } from '@renderer/components/fleet/toolbar'
+import { CommandPalette } from '@renderer/components/fleet/command-palette'
+import { NewAgentSheet } from '@renderer/components/fleet/new-agent-sheet'
+import { OverviewView } from '@renderer/components/fleet/views/overview-view'
+import { AgentsView } from '@renderer/components/fleet/views/agents-view'
+import { AgentDetailView } from '@renderer/components/fleet/views/agent-detail-view'
+import { ProjectsView } from '@renderer/components/fleet/views/projects-view'
+import { GroupsView } from '@renderer/components/fleet/views/groups-view'
+import { ApprovalsView } from '@renderer/components/fleet/views/approvals-view'
 
 export function AppShell() {
   const { view } = useFleet()
@@ -20,13 +20,13 @@ export function AppShell() {
 
   React.useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         setPaletteOpen((v) => !v)
       }
     }
-    document.addEventListener("keydown", onKeyDown)
-    return () => document.removeEventListener("keydown", onKeyDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
   }, [])
 
   return (
@@ -35,16 +35,20 @@ export function AppShell() {
       <div className="flex min-w-0 flex-1 flex-col">
         <Toolbar onOpenPalette={() => setPaletteOpen(true)} />
         <main className="min-w-0 flex-1 overflow-y-auto">
-          {view.name === "overview" && <OverviewView />}
-          {view.name === "agents" && <AgentsView onNewAgent={() => setNewAgentOpen(true)} />}
-          {view.name === "agent-detail" && <AgentDetailView agentId={view.agentId} />}
-          {view.name === "projects" && <ProjectsView />}
-          {view.name === "groups" && <GroupsView groupId={view.groupId} />}
-          {view.name === "approvals" && <ApprovalsView />}
+          {view.name === 'overview' && <OverviewView />}
+          {view.name === 'agents' && <AgentsView onNewAgent={() => setNewAgentOpen(true)} />}
+          {view.name === 'agent-detail' && <AgentDetailView agentId={view.agentId} />}
+          {view.name === 'projects' && <ProjectsView />}
+          {view.name === 'groups' && <GroupsView groupId={view.groupId} />}
+          {view.name === 'approvals' && <ApprovalsView />}
         </main>
       </div>
 
-      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} onNewAgent={() => setNewAgentOpen(true)} />
+      <CommandPalette
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+        onNewAgent={() => setNewAgentOpen(true)}
+      />
       <NewAgentSheet open={newAgentOpen} onOpenChange={setNewAgentOpen} />
     </div>
   )

@@ -1,42 +1,49 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { Plus } from "lucide-react"
-import { useFleet } from "@/lib/store"
-import { Button } from "@/components/ui/button"
+import * as React from 'react'
+import { Plus } from 'lucide-react'
+import { useFleet } from '@renderer/lib/store'
+import { Button } from '@renderer/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { AgentAvatar } from "@/components/fleet/agent-avatar"
-import { StatusLabel } from "@/components/fleet/status-dot"
-import { formatUptime } from "@/lib/format"
-import type { AgentStatus } from "@/lib/types"
+  SelectValue
+} from '@renderer/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@renderer/components/ui/table'
+import { AgentAvatar } from '@renderer/components/fleet/agent-avatar'
+import { StatusLabel } from '@renderer/components/fleet/status-dot'
+import { formatUptime } from '@renderer/lib/format'
+import type { AgentStatus } from '@renderer/lib/types'
 
-const STATUS_FILTERS: { value: AgentStatus | "all"; label: string }[] = [
-  { value: "all", label: "All statuses" },
-  { value: "running", label: "Running" },
-  { value: "idle", label: "Idle" },
-  { value: "sleeping", label: "Sleeping" },
-  { value: "needs-approval", label: "Needs approval" },
-  { value: "error", label: "Error" },
+const STATUS_FILTERS: { value: AgentStatus | 'all'; label: string }[] = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'running', label: 'Running' },
+  { value: 'idle', label: 'Idle' },
+  { value: 'sleeping', label: 'Sleeping' },
+  { value: 'needs-approval', label: 'Needs approval' },
+  { value: 'error', label: 'Error' }
 ]
 
 export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
   const { agents, groups, projects, goToAgent } = useFleet()
-  const [status, setStatus] = React.useState<string>("all")
-  const [groupId, setGroupId] = React.useState<string>("all")
-  const [projectId, setProjectId] = React.useState<string>("all")
+  const [status, setStatus] = React.useState<string>('all')
+  const [groupId, setGroupId] = React.useState<string>('all')
+  const [projectId, setProjectId] = React.useState<string>('all')
 
   const filtered = agents.filter((a) => {
-    if (status !== "all" && a.status !== status) return false
-    if (groupId !== "all" && a.groupId !== groupId) return false
-    if (projectId !== "all" && a.projectId !== projectId) return false
+    if (status !== 'all' && a.status !== status) return false
+    if (groupId !== 'all' && a.groupId !== groupId) return false
+    if (projectId !== 'all' && a.projectId !== projectId) return false
     return true
   })
 
@@ -46,7 +53,9 @@ export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
         <div className="flex flex-wrap items-center gap-2">
           <Select value={status} onValueChange={(v) => v && setStatus(v)}>
             <SelectTrigger size="sm" className="w-40">
-              <SelectValue>{(v: string) => STATUS_FILTERS.find((f) => f.value === v)?.label}</SelectValue>
+              <SelectValue>
+                {(v: string) => STATUS_FILTERS.find((f) => f.value === v)?.label}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -61,7 +70,9 @@ export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
 
           <Select value={groupId} onValueChange={(v) => v && setGroupId(v)}>
             <SelectTrigger size="sm" className="w-40">
-              <SelectValue>{(v: string) => (v === "all" ? "All groups" : groups.find((g) => g.id === v)?.name)}</SelectValue>
+              <SelectValue>
+                {(v: string) => (v === 'all' ? 'All groups' : groups.find((g) => g.id === v)?.name)}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -77,7 +88,11 @@ export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
 
           <Select value={projectId} onValueChange={(v) => v && setProjectId(v)}>
             <SelectTrigger size="sm" className="w-40">
-              <SelectValue>{(v: string) => (v === "all" ? "All projects" : projects.find((p) => p.id === v)?.name)}</SelectValue>
+              <SelectValue>
+                {(v: string) =>
+                  v === 'all' ? 'All projects' : projects.find((p) => p.id === v)?.name
+                }
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -116,7 +131,11 @@ export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
               const group = groups.find((g) => g.id === agent.groupId)
               const project = projects.find((p) => p.id === agent.projectId)
               return (
-                <TableRow key={agent.id} className="cursor-pointer" onClick={() => goToAgent(agent.id)}>
+                <TableRow
+                  key={agent.id}
+                  className="cursor-pointer"
+                  onClick={() => goToAgent(agent.id)}
+                >
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <AgentAvatar agent={agent} />
@@ -126,13 +145,17 @@ export function AgentsView({ onNewAgent }: { onNewAgent: () => void }) {
                   <TableCell>
                     <StatusLabel status={agent.status} />
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{group?.name ?? "—"}</TableCell>
-                  <TableCell className="text-muted-foreground">{project?.name ?? "—"}</TableCell>
-                  <TableCell className="max-w-64 truncate text-muted-foreground">{agent.currentTask ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{group?.name ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{project?.name ?? '—'}</TableCell>
+                  <TableCell className="max-w-64 truncate text-muted-foreground">
+                    {agent.currentTask ?? '—'}
+                  </TableCell>
                   <TableCell className="tabular text-muted-foreground">
                     {agent.machine.vcpu} vCPU · {agent.machine.memoryGb} GB
                   </TableCell>
-                  <TableCell className="tabular text-right text-muted-foreground">{formatUptime(agent.uptimeMinutes)}</TableCell>
+                  <TableCell className="tabular text-right text-muted-foreground">
+                    {formatUptime(agent.uptimeMinutes)}
+                  </TableCell>
                 </TableRow>
               )
             })}

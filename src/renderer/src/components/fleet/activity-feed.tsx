@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useFleet } from "@/lib/store"
-import { AgentAvatar } from "@/components/fleet/agent-avatar"
-import { TimeAgo } from "@/components/fleet/time-ago"
+import { useFleet } from '@renderer/lib/store'
+import { AgentAvatar } from '@renderer/components/fleet/agent-avatar'
+import { TimeAgo } from '@renderer/components/fleet/time-ago'
 
 export function ActivityFeed() {
   const { activity, agents, goToAgent } = useFleet()
@@ -26,7 +26,10 @@ export function ActivityFeed() {
                 <AgentAvatar agent={agent} className="mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs leading-snug text-foreground">{item.message}</p>
-                  <TimeAgo iso={item.timestamp} className="tabular mt-0.5 block text-[11px] text-muted-foreground" />
+                  <TimeAgo
+                    iso={item.timestamp}
+                    className="tabular mt-0.5 block text-[11px] text-muted-foreground"
+                  />
                 </div>
               </button>
             </li>

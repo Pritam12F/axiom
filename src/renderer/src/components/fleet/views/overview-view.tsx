@@ -1,17 +1,17 @@
-"use client"
+'use client'
 
-import { Bot, ListChecks, ShieldAlert, Wallet } from "lucide-react"
-import { useFleet } from "@/lib/store"
-import { StatCard } from "@/components/fleet/stat-card"
-import { AgentCard } from "@/components/fleet/agent-card"
-import { ActivityFeed } from "@/components/fleet/activity-feed"
-import { formatCurrency } from "@/lib/format"
+import { Bot, ListChecks, ShieldAlert, Wallet } from 'lucide-react'
+import { useFleet } from '@renderer/lib/store'
+import { StatCard } from '@renderer/components/fleet/stat-card'
+import { AgentCard } from '@renderer/components/fleet/agent-card'
+import { ActivityFeed } from '@renderer/components/fleet/activity-feed'
+import { formatCurrency } from '@renderer/lib/format'
 
 export function OverviewView() {
   const { agents, tasks, pendingApprovalCount, spendToday, dailyBudget } = useFleet()
 
-  const runningCount = agents.filter((a) => a.status === "running").length
-  const inProgressTasks = tasks.filter((t) => t.column === "in-progress").length
+  const runningCount = agents.filter((a) => a.status === 'running').length
+  const inProgressTasks = tasks.filter((t) => t.column === 'in-progress').length
 
   return (
     <div className="flex flex-col gap-5 p-5">
@@ -22,7 +22,9 @@ export function OverviewView() {
           label="Awaiting approval"
           value={String(pendingApprovalCount)}
           icon={ShieldAlert}
-          accentClassName={pendingApprovalCount > 0 ? "bg-status-approval/15 text-status-approval" : undefined}
+          accentClassName={
+            pendingApprovalCount > 0 ? 'bg-status-approval/15 text-status-approval' : undefined
+          }
         />
         <StatCard
           label="Spend today"

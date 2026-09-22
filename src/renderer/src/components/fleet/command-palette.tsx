@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { Bot, FolderKanban, LayoutDashboard, ShieldAlert, UserPlus, Users } from "lucide-react"
+import * as React from 'react'
+import { Bot, FolderKanban, LayoutDashboard, ShieldAlert, UserPlus, Users } from 'lucide-react'
 import {
   Command,
   CommandDialog,
@@ -10,15 +10,15 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-} from "@/components/ui/command"
-import { useFleet } from "@/lib/store"
-import { StatusDot } from "@/components/fleet/status-dot"
+  CommandSeparator
+} from '@renderer/components/ui/command'
+import { useFleet } from '@renderer/lib/store'
+import { StatusDot } from '@renderer/components/fleet/status-dot'
 
 export function CommandPalette({
   open,
   onOpenChange,
-  onNewAgent,
+  onNewAgent
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -31,11 +31,16 @@ export function CommandPalette({
       fn()
       onOpenChange(false)
     },
-    [onOpenChange],
+    [onOpenChange]
   )
 
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange} title="Command Palette" description="Jump to anything in Fleet">
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Command Palette"
+      description="Jump to anything in Fleet"
+    >
       <Command>
         <CommandInput placeholder="Jump to an agent, project, group, or run an action..." />
         <CommandList>
@@ -45,11 +50,11 @@ export function CommandPalette({
               <UserPlus />
               New agent
             </CommandItem>
-            <CommandItem onSelect={() => run(() => setView({ name: "overview" }))}>
+            <CommandItem onSelect={() => run(() => setView({ name: 'overview' }))}>
               <LayoutDashboard />
               Go to Overview
             </CommandItem>
-            <CommandItem onSelect={() => run(() => setView({ name: "approvals" }))}>
+            <CommandItem onSelect={() => run(() => setView({ name: 'approvals' }))}>
               <ShieldAlert />
               Go to Approvals
             </CommandItem>
@@ -57,7 +62,11 @@ export function CommandPalette({
           <CommandSeparator />
           <CommandGroup heading="Agents">
             {agents.map((agent) => (
-              <CommandItem key={agent.id} value={agent.name} onSelect={() => run(() => goToAgent(agent.id))}>
+              <CommandItem
+                key={agent.id}
+                value={agent.name}
+                onSelect={() => run(() => goToAgent(agent.id))}
+              >
                 <Bot />
                 <span className="flex-1">{agent.name}</span>
                 <StatusDot status={agent.status} />
@@ -67,7 +76,11 @@ export function CommandPalette({
           <CommandSeparator />
           <CommandGroup heading="Projects">
             {projects.map((project) => (
-              <CommandItem key={project.id} value={project.name} onSelect={() => run(() => setView({ name: "projects" }))}>
+              <CommandItem
+                key={project.id}
+                value={project.name}
+                onSelect={() => run(() => setView({ name: 'projects' }))}
+              >
                 <FolderKanban />
                 {project.name}
               </CommandItem>
@@ -76,7 +89,11 @@ export function CommandPalette({
           <CommandSeparator />
           <CommandGroup heading="Groups">
             {groups.map((group) => (
-              <CommandItem key={group.id} value={group.name} onSelect={() => run(() => setView({ name: "groups", groupId: group.id }))}>
+              <CommandItem
+                key={group.id}
+                value={group.name}
+                onSelect={() => run(() => setView({ name: 'groups', groupId: group.id }))}
+              >
                 <Users />
                 {group.name}
               </CommandItem>

@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { Power } from "lucide-react"
+import { Power } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,10 +10,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { useFleet } from "@/lib/store"
+  AlertDialogTrigger
+} from '@renderer/components/ui/alert-dialog'
+import { Button } from '@renderer/components/ui/button'
+import { useFleet } from '@renderer/lib/store'
 
 export function KillSwitchDialog() {
   const { killSwitch } = useFleet()
@@ -28,8 +28,9 @@ export function KillSwitchDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Stop every agent machine?</AlertDialogTitle>
           <AlertDialogDescription>
-            This immediately powers down all agent machines across every project and group. In-progress work will be
-            interrupted and unsaved session state may be lost. This cannot be undone from here.
+            This immediately powers down all agent machines across every project and group.
+            In-progress work will be interrupted and unsaved session state may be lost. This cannot
+            be undone from here.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

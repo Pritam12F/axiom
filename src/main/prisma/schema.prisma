@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  password      String?
+  emailVerified Boolean    @default(false)
+  phone         String?    @unique
+  image         String?
+  agents        Agent[]
+  projects      Project[]
+  groups        Group[]
+  sessions      Session[]
+  accounts      Account[]
+  resources     Resource[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@map("user")
+}
+
+model Agent {
+  id              String            @id @default(uuid())
+  name            String
+  running         Boolean?          @default(false)
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projects        ProjectOnAgents[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("agent")
+}
+
+model Project {
+  id                  String            @id @default(uuid())
+  name                String
+  description         String            @db.Text
+  initialInstructions String            @db.Text
+  instructions        String[]          @db.Text
+  resources           Resource[]
+  finished            Boolean?          @default(false)
+  progress            Int               @default(0)
+  userId              String
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  agents              ProjectOnAgents[]
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@map("project")
+}
+
+model ProjectOnAgents {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, agentId])
+  @@map("project_on_agents")
+}
+
+model Model {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("model")
+}
+
+model Resource {
+  id        String   @id @default(cuid())
+  source    String?
+  url       String
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("resource")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  color       String
+  createdById String
+  creator     User     @relation(fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Log {
+  id         String   @id @default(cuid())
+  name       String
+  branchName String
+  logType    LogType
+  status     PrStatus
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum ModelEffort {
+  LOW
+  MEDIUM
+  HIGH
+  EXTRA_HIGH
+}
+
+enum LogType {
+  PLANNED
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum PrStatus {
+  DRAFT
+  READY
+}
