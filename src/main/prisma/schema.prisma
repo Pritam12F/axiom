@@ -27,15 +27,19 @@ model User {
 }
 
 model Agent {
-  id              String            @id @default(uuid())
-  name            String
-  running         Boolean?          @default(false)
-  userId          String
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  projects        ProjectOnAgents[]
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  id        String            @id @default(uuid())
+  name      String
+  running   Boolean?          @default(false)
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projects  ProjectOnAgents[]
+  models    AgentOnModels[]
+  logs      Log[]
+  groups    GroupOnAgents[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
+  @@index([userId])
   @@map("agent")
 }
 
@@ -50,10 +54,13 @@ model Project {
   progress            Int               @default(0)
   userId              String
   user                User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId             String
+  group               Group             @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   agents              ProjectOnAgents[]
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
+  @@index([userId, groupId])
   @@map("project")
 }
 
@@ -67,16 +74,44 @@ model ProjectOnAgents {
   updatedAt DateTime @updatedAt
 
   @@unique([projectId, agentId])
+  @@index([projectId, agentId])
   @@map("project_on_agents")
 }
 
 model Model {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String?
+  effort      ModelEffort?
+  agents      AgentOnModels[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@map("model")
+}
+
+model ModelEffort {
+  id          String   @id @default(cuid())
+  value       String
+  description String?
+  modelId     Int      @unique
+  model       Model    @relation(fields: [modelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([modelId])
+  @@map("model_effort")
+}
+
+model AgentOnModels {
+  id      String @id @default(cuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  modelId Int
+  model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([agentId, modelId])
+  @@map("agent_on_models")
 }
 
 model Resource {
@@ -90,17 +125,35 @@ model Resource {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([projectId, userId])
   @@map("resource")
 }
 
 model Group {
-  id          String   @id @default(cuid())
+  id          String          @id @default(cuid())
   name        String
   color       String
   createdById String
-  creator     User     @relation(fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  creator     User            @relation(fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tasks       Project[]
+  agents      GroupOnAgents[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([createdById])
+  @@map("group")
+}
+
+model GroupOnAgents {
+  id      String @id @default(cuid())
+  agentId String
+  agent   Agent  @relation(fields: [agentId], references: [id])
+  groupId String
+  group   Group  @relation(fields: [groupId], references: [id])
+
+  @@unique([agentId, groupId])
+  @@index([agentId, groupId])
+  @@map("group_on_agents")
 }
 
 model Log {
@@ -109,8 +162,13 @@ model Log {
   branchName String
   logType    LogType
   status     PrStatus
+  agentId    String?
+  agent      Agent?   @relation(fields: [agentId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([agentId])
+  @@map("log")
 }
 
 model Session {
@@ -159,13 +217,6 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
-}
-
-enum ModelEffort {
-  LOW
-  MEDIUM
-  HIGH
-  EXTRA_HIGH
 }
 
 enum LogType {
