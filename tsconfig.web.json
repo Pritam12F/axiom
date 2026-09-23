@@ -11,5 +11,6 @@
       "@renderer/*": ["./src/renderer/src/*"],
       "@main/*": ["./src/main/*"]
     }
-  }
+  },
+  "declaration": false
 }

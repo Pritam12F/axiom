@@ -19,6 +19,12 @@ export default defineConfig({
           assetFileNames: '[name].[ext]'
         }
       }
+    },
+    resolve: {
+      alias: {
+        // 🛑 Do NOT include generic wildcards (*) here, just map the raw string prefix
+        '@main': resolve(__dirname, 'src/main')
+      }
     }
   },
 
@@ -36,6 +42,12 @@ export default defineConfig({
           chunkFileNames: '[name].js',
           assetFileNames: '[name].[ext]'
         }
+      }
+    },
+    resolve: {
+      alias: {
+        // 🛑 Do NOT include generic wildcards (*) here, just map the raw string prefix
+        '@preload': resolve(__dirname, 'src/preload')
       }
     }
   },

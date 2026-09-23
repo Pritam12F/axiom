@@ -13,6 +13,7 @@ model User {
   password      String?
   emailVerified Boolean    @default(false)
   phone         String?    @unique
+  username      String?
   image         String?
   agents        Agent[]
   projects      Project[]
@@ -47,6 +48,7 @@ model Project {
   id                  String            @id @default(uuid())
   name                String
   description         String            @db.Text
+  projectUrl          String            @db.Text
   initialInstructions String            @db.Text
   instructions        String[]          @db.Text
   resources           Resource[]
@@ -54,8 +56,8 @@ model Project {
   progress            Int               @default(0)
   userId              String
   user                User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  groupId             String
-  group               Group             @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId             String?
+  group               Group?            @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   agents              ProjectOnAgents[]
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
@@ -79,13 +81,41 @@ model ProjectOnAgents {
 }
 
 model Model {
-  id          Int             @id @default(autoincrement())
-  name        String
+  id Int @id @default(autoincrement())
+
+  // Core identity
+  modelId     String  @unique // e.g. "grok-4.7"
+  object      String  @default("model")
+  ownedBy     String  @default("xai")
+  version     String?
+  fingerprint String?
+  created     Int? // Unix timestamp from xAI
+
+  // Aliases & modalities
+  aliases          String[] // e.g. ["grok-4.7-latest"]
+  inputModalities  String[] // ["text", "image"]
+  outputModalities String[] // ["text"]
+
+  // Standard pricing (stored as cents per 100M tokens)
+  promptTextTokenPrice       Int?
+  promptImageTokenPrice      Int?
+  cachedPromptTextTokenPrice Int?
+  completionTextTokenPrice   Int?
+  searchPrice                Int?
+
+  // Long-context pricing
+  longContextThreshold                  Int? @default(0) // 0 = no long-context tier
+  promptTextTokenPriceLongContext       Int?
+  cachedPromptTextTokenPriceLongContext Int?
+  completionTextTokenPriceLongContext   Int?
+
+  // Your existing fields
   description String?
-  effort      ModelEffort?
+  effort      ModelEffort[]
   agents      AgentOnModels[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("model")
 }
@@ -94,7 +124,7 @@ model ModelEffort {
   id          String   @id @default(cuid())
   value       String
   description String?
-  modelId     Int      @unique
+  modelId     Int
   model       Model    @relation(fields: [modelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
